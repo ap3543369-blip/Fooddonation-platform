@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Password Reset</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/api.js"></script>
+</head>
+<body>
+<div class="center-page"><div class="auth">
+  <div class="brand" style="margin-bottom:14px"><div class="logo">🍲</div> Food Donation</div>
+  <h2>Naya password set karein 🔐</h2><p class="sub">Kam se kam 6 character</p>
+  <form id="f">
+    <label>Naya Password</label><div class="pw"><input type="password" id="p1" minlength="6" required></div>
+    <label>Password dobara likhein</label><div class="pw"><input type="password" id="p2" minlength="6" required></div>
+    <p class="msg" id="m"></p>
+    <button class="btn block">Password Badlein</button>
+    <div style="text-align:center;margin-top:12px"><a href="index.html" class="link">← Login par jaayein</a></div>
+  </form>
+</div></div>
+<script>
+bindEyes();
+const q = new URLSearchParams(location.search);
+document.getElementById('f').onsubmit = async e => {
+  e.preventDefault();
+  const m = document.getElementById('m');
+  if (p1.value !== p2.value) { m.className = 'msg err'; m.textContent = 'Dono password same hone chahiye.'; return; }
+  try {
+    const r = await API.post('/api/auth/reset-password', { email: q.get('email'), token: q.get('token'), newPassword: p1.value });
+    m.className = 'msg ok'; m.textContent = r.message + ' Redirect ho raha hai…';
+    setTimeout(() => location.href = 'index.html', 1800);
+  } catch (err) { m.className = 'msg err'; m.textContent = err.message; }
+};
+</script>
+</body>
+</html>
